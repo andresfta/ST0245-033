@@ -1,0 +1,30 @@
+public class Date
+{
+    int date;
+    
+    public Date(int date){
+        this.date = date;
+    }
+    
+    int getDay(){
+        return date % 100;
+    }
+    
+    int getMonth(){
+        return date / 100 % 100;
+    }
+    
+    int getYear(){
+        return date / 10000;
+    }
+    
+    public String toString(){
+        return "Day: " + getDay() + "\nMonth: " + getMonth() + "\nYear: " + getYear();
+    }
+    
+    String compareDates(Date d){
+        if(d.getYear() < getYear())return "before";
+        if(d.getYear() > getYear())return "later";
+        return "same";
+    }
+}
