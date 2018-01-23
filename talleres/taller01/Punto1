@@ -1,0 +1,21 @@
+public class Counter
+{
+    String id;
+    int count;
+    
+    public Counter(String id){
+        this.id = id;
+    }
+    
+    void increase(){
+        count++;
+    }
+    
+    int increments(){
+        return count;
+    }
+    
+    public String toString(){
+        return "Counter id: " + id + "\nCount so far: " + count;
+    }
+}
