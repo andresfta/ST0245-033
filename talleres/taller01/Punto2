@@ -1,0 +1,30 @@
+public class Punto2D
+{
+    double x;
+    double y;
+    
+    public Punto2D(double x, double y){
+        this.x = x;
+        this.y = y;
+    }
+    
+    double getX(){
+        return x;
+    }
+    
+    double getY(){
+        return y;
+    }
+    
+    double radio(){
+        return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+    }
+    
+    double angulo(){
+        return Math.atan2(x,y);
+    }
+    
+    double distanciaEuclidea(Punto2D p){
+        return Math.sqrt(Math.pow(p.getX() - x,2) + Math.pow(p.getY() - y,2));
+    }
+}
