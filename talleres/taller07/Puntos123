@@ -1,0 +1,128 @@
+import java.util.*;
+
+public class Listas
+{
+
+    public class Node
+    {
+        public int data;
+        public Node next;
+
+        public Node(int data){
+            next = null;
+            this.data = data;
+        }
+    }
+
+    private Node first;
+    private int size;
+
+    public Listas()
+    {
+        size = 0;
+        first = null;   
+    }
+
+    private Node getNode(int index) throws IndexOutOfBoundsException {
+        if (index >= 0 && index < size) {
+            Node temp = first;
+            for (int i = 0; i < index; i++) {
+                temp = temp.next; 
+            }
+            return temp;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Returns the element at the specified position in this list.
+     * @param index - index of the element to return
+     * @return the element at the specified position in this list
+     */
+    public int get(int index) {
+        Node temp = null;
+        try {
+            temp = getNode(index);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        return temp.data;
+    }
+
+    public int size(){
+        return size;
+    }
+
+    public void insert(int data, int index){
+        Node nuevo = new Node(data);
+        if(first == null){
+            first = nuevo;
+            size++;
+            return;
+        } 
+        Node actual = first;
+        Node siguiente = first;
+        for(int i = 0; i < index-1; i++){
+            actual = siguiente.next;
+            siguiente = siguiente.next;
+        }
+        System.out.println(actual.data);
+        Node n = actual.next;
+        actual.next = nuevo;
+        nuevo.next = n;
+        size++;
+    }
+
+    public void remove(int index){
+        System.out.println(first.next.data);
+        Node actual = first;
+        Node siguiente = first;
+        if(first == null){
+            return;
+        } else {
+            if(index == 0){
+                first = first.next;
+                size--;
+                return;
+            }
+            for(int i = 0; i < size; i++){
+                if(index-1 == i){
+                    actual.next = actual.next.next;
+                    break;
+                }
+                actual = siguiente.next;
+                siguiente = siguiente.next;
+            }
+
+            size--;
+        }
+    }
+
+    public boolean contains(int data){
+        Node buscado = first;
+        boolean esta = false;
+        while(buscado != null && buscado.data == data){      
+            buscado = buscado.next;
+        }
+        return buscado != null;
+    }
+
+    public int maximoAux(Node nodo, int maximo){
+        if(nodo != null){
+            if(nodo.data > maximo){
+                maximo = nodo.data;
+                nodo = nodo.next;
+                return maximoAux(nodo,maximo);
+            }
+        }
+        return maximo;
+
+    }
+
+    public int maximo(){
+        return maximoAux(first,0);
+    }
+}
