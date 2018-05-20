@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 import java.io.*;
 
-class Node{
+class Pee{
     double x, y, value;
 
-    Node(double x, double y, double value) {
+    Pee(double x, double y, double value) {
         this.x = x;
         this.y = y;
         this.value = value; /* some data*/ 
@@ -50,7 +50,7 @@ class Boundry{
 public class QuadTree {
     final int MAX_CAPACITY = 4;
     int level = 0;
-    List<Node> nodes;
+    List<Pee> Pees;
     QuadTree northWest = null;
     QuadTree northEast = null;
     QuadTree southWest = null;
@@ -62,27 +62,32 @@ public class QuadTree {
 
     QuadTree(int level, Boundry boundry){
         this.level = level;
-        nodes = new ArrayList<>();
+        Pees = new ArrayList<>();
         this.boundry = boundry;
         cx = new ArrayList<>(); cy = new ArrayList<>();
     }
 
     /* Traveling the Graph using Depth First Search*/
-    static void dfs(QuadTree tree){
-        if (tree == null)return;
-        System.out.printf("\nLevel = %d [X1 = %f Y1 = %f] \t[X2 =%f Y2 = %f] ",
-            tree.level, tree.boundry.getxMin(), tree.boundry.getyMin(),
+    static void dfs(QuadTree tree, double distance){
+        if(tree == null || tree.Pees.size() == 0)return;
+        System.out.printf("\nLevel = %d [X1 = %f Y1 = %f] \t[X2 =%f Y2 = %f] ", tree.level, tree.boundry.getxMin(), tree.boundry.getyMin(),
             tree.boundry.getxMax(), tree.boundry.getyMax());
-        for(Node node : tree.nodes) {
-            System.out.printf(" \n\t  x = %f y = %f", node.x, node.y);
+        List<Pee> Temp = tree.Pees; 
+        for(int i = 0; i < Temp.size(); i++) {
+            for(int j = i + 1; j < Temp.size(); j++){
+                // System.out.printf(" \n\t  x = %f y = %f", pee.x, pee.y);
+                if(Math.abs(Temp.get(i).x - Temp.get(j).x) < distance && Math.abs(Temp.get(i).y - Temp.get(j).y) < distance){
+                    System.out.printf(" \n\t  x1 = %f y1 = %f \t x2 = %f y2 = %f", Temp.get(i).x, Temp.get(i).y, Temp.get(j).x, Temp.get(j).y);
+                }
+            }
         }
-        if (tree.nodes.size() == 0) {
+        if(tree.Pees.size() == 0) {
             System.out.printf(" \n\t  Leaf Node.");
         }
-        dfs(tree.northWest);
-        dfs(tree.northEast);
-        dfs(tree.southWest);
-        dfs(tree.southEast);
+        dfs(tree.northWest, distance);
+        dfs(tree.northEast, distance);
+        dfs(tree.southWest, distance);
+        dfs(tree.southEast, distance);
     }
 
     void split(){
@@ -100,9 +105,9 @@ public class QuadTree {
             return;
         }
         //
-        Node node = new Node(x, y, value);
-        if(nodes.size() < MAX_CAPACITY){
-            nodes.add(node);
+        Pee Pee = new Pee(x, y, value);
+        if(Pees.size() < MAX_CAPACITY){
+            Pees.add(Pee);
             return;
         }
         // Exceeded the capacity so split it in FOUR
@@ -121,37 +126,24 @@ public class QuadTree {
         // System.out.printf("ERROR : Unhandled partition %f, %f \n", x, y);
     }
 
-    static void graphic() throws FileNotFoundException{
-        main(null);
-        GraphicsPee gp = new GraphicsPee();
-        ArrayList<Integer> CX = new ArrayList<>();
-        ArrayList<Integer> CY = new ArrayList<>();
-        for(Double x: cx){CX.add((int)(x * 10000) + 756000);}
-        for(Double y: cy){CY.add(63700 - (int)(y * 10000));}
-        gp.coordinates(CX, CY);
-        // System.out.println(CX + "\n" + CY);
-        gp.main(null);
-        // System.out.println(CX);
-        // System.out.println(CY);
-    }
-
     public static void main(String args[]) throws FileNotFoundException{
         QuadTree anySpace = new QuadTree(1, new Boundry(-75.60, 6.30, -75.50, 6.37));
-        Scanner sc = new Scanner(new File("Datos100000.txt"));
+        GraphicsPee.main(args);
+        if(!args[0].endsWith(".txt"))args[0] += ".txt";
+        Scanner sc = new Scanner(new File(args[0]));
         sc.nextLine();
         while(sc.hasNextLine()){
             String line = sc.nextLine();
             Scanner inLine = new Scanner(line);
             inLine.useDelimiter(",");
             // System.out.println("*" + line + "*");
-            double x = Double.parseDouble(inLine.next()); cx.add(x); System.out.println(x);
-            double y = Double.parseDouble(inLine.next()); cy.add(y); System.out.println(y);
+            double x = Double.parseDouble(inLine.next()); cx.add(x); // System.out.println(x);
+            double y = Double.parseDouble(inLine.next()); cy.add(y); // System.out.println(y);
             anySpace.insert(x,y,0);
         }
         // long startTime = System.currentTimeMillis();
-        // QuadTree.dfs(anySpace);
+        QuadTree.dfs(anySpace, Double.parseDouble(args[1]));
         // long endTime = System.currentTimeMillis();
-        // System.out.println("*" + (endTime - startTime) + "*");
-        // QuadTree.dfs(anySpace);
+        // System.out.println(endTime - startTime);
     }
 }

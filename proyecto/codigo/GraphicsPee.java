@@ -8,9 +8,20 @@ import java.util.Random;
 public class GraphicsPee extends JPanel{
     static ArrayList<Integer> cx = new ArrayList<>();
     static ArrayList<Integer> cy = new ArrayList<>();
+    int level;
 
-    GraphicsPee(){
-
+    GraphicsPee(String fileName) throws java.io.FileNotFoundException{
+        if(!fileName.endsWith("txt"))fileName += ".txt";
+        java.util.Scanner sc = new java.util.Scanner(new java.io.File(fileName));
+        sc.nextLine();
+        while(sc.hasNextLine()){
+            String line = sc.nextLine();
+            java.util.Scanner inLine = new java.util.Scanner(line);
+            inLine.useDelimiter(",");
+            // System.out.println("*" + line + "*");
+            double x = Double.parseDouble(inLine.next()); cx.add((int)(x * 10000) + 756000); // System.out.println(x);
+            double y = Double.parseDouble(inLine.next()); cy.add(63700 - (int)(y * 10000)); // System.out.println(y);
+        }
     }
 
     void coordinates(ArrayList<Integer> cx, ArrayList<Integer> cy){
@@ -19,6 +30,7 @@ public class GraphicsPee extends JPanel{
 
     public void paintComponent(Graphics g){
         // g.fillOval(754,306,10,10);
+        // System.out.println(Math.min(cx.size(), cy.size()));
         Color[] random = new Color[4];
         random[0] = Color.YELLOW;
         random[1] = Color.RED;
@@ -37,13 +49,14 @@ public class GraphicsPee extends JPanel{
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws java.io.FileNotFoundException{
         // this.cx = cx; this.cy = cy;
         JFrame frame = new JFrame("Map");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new GraphicsPee());
+        frame.add(new GraphicsPee(args[0]));
         frame.setSize(1000,750);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        // frame.setResizable(false);
     }    
 }
